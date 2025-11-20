@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,44 +6,71 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Layers, Plus, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { boardsAPI } from "@/services/api";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [boards, setBoards] = useState([
-    { id: "1", name: "Product Roadmap", description: "Q1 2024 Features", color: "from-blue-500 to-indigo-600" },
-    { id: "2", name: "Marketing Campaign", description: "Social Media Strategy", color: "from-purple-500 to-pink-600" },
-  ]);
+  const { logout } = useAuth();
+  const [boards, setBoards] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [newBoardName, setNewBoardName] = useState("");
   const [newBoardDescription, setNewBoardDescription] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
 
-  const handleCreateBoard = () => {
+  useEffect(() => {
+    fetchBoards();
+  }, []);
+
+  const fetchBoards = async () => {
+    try {
+      setLoading(true);
+      const response = await boardsAPI.getBoards();
+      if (response.success) {
+        setBoards(response.data.boards);
+      }
+    } catch (error) {
+      console.error('Error fetching boards:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateBoard = async () => {
     if (newBoardName.trim()) {
-      const colors = [
-        "from-blue-500 to-indigo-600",
-        "from-purple-500 to-pink-600",
-        "from-green-500 to-teal-600",
-        "from-orange-500 to-red-600",
-        "from-cyan-500 to-blue-600",
-        "from-pink-500 to-rose-600",
-      ];
+      try {
+        setCreating(true);
+        const colors = [
+          "from-blue-500 to-indigo-600",
+          "from-purple-500 to-pink-600",
+          "from-green-500 to-teal-600",
+          "from-orange-500 to-red-600",
+          "from-cyan-500 to-blue-600",
+          "from-pink-500 to-rose-600",
+        ];
 
-      const newBoard = {
-        id: Date.now().toString(),
-        name: newBoardName,
-        description: newBoardDescription,
-        color: colors[Math.floor(Math.random() * colors.length)],
-      };
-
-      setBoards([...boards, newBoard]);
-      setNewBoardName("");
-      setNewBoardDescription("");
-      setIsDialogOpen(false);
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const response = await boardsAPI.createBoard(newBoardName, newBoardDescription, color);
+        
+        if (response.success) {
+          setBoards([...boards, response.data.board]);
+          setNewBoardName("");
+          setNewBoardDescription("");
+          setIsDialogOpen(false);
+        }
+      } catch (error) {
+        console.error('Error creating board:', error);
+        alert(error.message || 'Failed to create board');
+      } finally {
+        setCreating(false);
+      }
     }
   };
 
   const handleLogout = () => {
+    logout();
     navigate("/login");
   };
 
@@ -113,15 +140,19 @@ const Dashboard = () => {
                     }}
                   />
                 </div>
-                <Button onClick={handleCreateBoard} className="w-full" variant="hero">
-                  Create Board
+                <Button onClick={handleCreateBoard} className="w-full" variant="hero" disabled={creating}>
+                  {creating ? "Creating..." : "Create Board"}
                 </Button>
               </div>
             </DialogContent>
           </Dialog>
         </div>
 
-        {boards.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="text-muted-foreground">Loading boards...</div>
+          </div>
+        ) : boards.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center mx-auto mb-4">
               <Layers className="w-8 h-8 text-muted-foreground" />
@@ -139,7 +170,7 @@ const Dashboard = () => {
               <Card
                 key={board.id}
                 className="group cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 border-border overflow-hidden"
-                onClick={() => navigate(`/board/${board.id}`)}
+                onClick={() => navigate(`/board/${board._id}`)}
               >
                 <div className={`h-32 bg-gradient-to-br ${board.color} relative overflow-hidden`}>
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
@@ -151,6 +182,9 @@ const Dashboard = () => {
                   <CardDescription className="line-clamp-2">
                     {board.description || "No description"}
                   </CardDescription>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    {board.members?.length > 0 && `${board.members.length} member(s)`}
+                  </div>
                 </CardHeader>
               </Card>
             ))}

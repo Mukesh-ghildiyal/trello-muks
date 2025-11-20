@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Plus, X } from 'lucide-react'
 import CardItem from './CardItem'
 
-const BoardList = ({ list, onAddCard }) => {
+const BoardList = ({ list, onAddCard, onUpdateCard, onDeleteCard }) => {
   const [isAddingCard, setIsAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
   const [cardDescription, setCardDescription] = useState('')
@@ -27,38 +27,43 @@ const BoardList = ({ list, onAddCard }) => {
   }
 
   return (
-    <div className="flex-shrink-0 w-80">
-      <Card className="bg-card h-full flex flex-col">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg font-semibold">{list.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto">
+    <div className="flex-shrink-0 w-72">
+      <div className="bg-white rounded-lg shadow-sm h-full flex flex-col border border-gray-200">
+        <div className="px-3 py-3 border-b border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-700">{list.title}</h3>
+        </div>
+        <div className="flex-1 overflow-y-auto px-2 py-2">
           <div ref={setNodeRef} className="min-h-[100px]">
             <SortableContext items={list.cards.map(card => card.id)} strategy={verticalListSortingStrategy}>
               {list.cards.map((card) => (
-                <CardItem key={card.id} card={card} />
+                <CardItem 
+                  key={card.id} 
+                  card={card} 
+                  onUpdate={onUpdateCard}
+                  onDelete={onDeleteCard}
+                />
               ))}
             </SortableContext>
           </div>
 
           {isAddingCard ? (
-            <form onSubmit={handleSubmit} className="mt-3 space-y-2">
+            <form onSubmit={handleSubmit} className="mt-2 space-y-2 bg-white p-2 rounded border border-gray-200">
               <Input
                 placeholder="Card title"
                 value={cardTitle}
                 onChange={(e) => setCardTitle(e.target.value)}
                 autoFocus
-                className="text-sm"
+                className="text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
               />
               <Input
                 placeholder="Description (optional)"
                 value={cardDescription}
                 onChange={(e) => setCardDescription(e.target.value)}
-                className="text-sm"
+                className="text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
               />
-              <div className="flex gap-2">
-                <Button type="submit" size="sm" variant="default" className="flex-1">
-                  Add Card
+              <div className="flex gap-2 pt-1">
+                <Button type="submit" size="sm" variant="default" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+                  Add
                 </Button>
                 <Button
                   type="button"
@@ -69,8 +74,9 @@ const BoardList = ({ list, onAddCard }) => {
                     setCardTitle('')
                     setCardDescription('')
                   }}
+                  className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                 >
-                  <X className="w-4 h-4" />
+                  Cancel
                 </Button>
               </div>
             </form>
@@ -78,15 +84,15 @@ const BoardList = ({ list, onAddCard }) => {
             <Button
               variant="ghost"
               size="sm"
-              className="w-full mt-2 justify-start text-muted-foreground hover:text-foreground"
+              className="w-full mt-2 justify-start text-gray-600 hover:text-gray-800 hover:bg-gray-50"
               onClick={() => setIsAddingCard(true)}
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Add a card
+              <Plus className="w-4 h-4 mr-1" />
+              Add Card
             </Button>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

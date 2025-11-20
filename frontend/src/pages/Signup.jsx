@@ -5,17 +5,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Layers } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement JWT authentication
-    navigate("/dashboard");
+    setError("");
+    setLoading(true);
+
+    const result = await signup(name, email, password);
+    
+    if (result.success) {
+      // Check if there's a pending invite token
+      const pendingInviteToken = localStorage.getItem('pendingInviteToken');
+      if (pendingInviteToken) {
+        localStorage.removeItem('pendingInviteToken');
+        navigate(`/accept-invite/${pendingInviteToken}`);
+      } else {
+        navigate("/dashboard");
+      }
+    } else {
+      setError(result.message || "Signup failed. Please try again.");
+    }
+    
+    setLoading(false);
   };
 
   return (
@@ -65,8 +86,13 @@ const Signup = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" variant="hero">
-              Create Account
+            {error && (
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                {error}
+              </div>
+            )}
+            <Button type="submit" className="w-full" variant="hero" disabled={loading}>
+              {loading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
