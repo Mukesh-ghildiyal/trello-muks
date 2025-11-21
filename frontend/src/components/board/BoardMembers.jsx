@@ -58,7 +58,7 @@ const BoardMembers = ({ boardId, board }) => {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-2 font-medium text-white hover:bg-gray-700"
+          className="gap-2 font-medium text-white hover:bg-gray-700 dark:hover:bg-yellow-500/20"
           onClick={() => setIsOpen(true)}
         >
           <Users className="w-4 h-4" />

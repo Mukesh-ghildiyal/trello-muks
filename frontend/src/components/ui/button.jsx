@@ -3,11 +3,14 @@ import { cn } from '@/lib/utils'
 
 const Button = React.forwardRef(({ className, variant = 'default', size = 'default', ...props }, ref) => {
   const variants = {
-    default: 'bg-gray-500 text-white hover:bg-gray-600 shadow-sm',
-    hero: 'bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700 shadow-lg hover:shadow-xl transition-all',
-    outline: 'border-2 border-gray-300 bg-gray-100 hover:bg-gray-200 hover:border-gray-400 text-foreground shadow-sm hover:shadow-md transition-all',
-    ghost: 'hover:bg-gray-100 hover:text-foreground text-muted-foreground',
-    secondary: 'bg-gray-200 text-foreground hover:bg-gray-300 border border-gray-300 shadow-sm hover:shadow-md transition-all',
+    // Light mode: black button with white text
+    // Dark mode: yellow button with white text
+    default: 'bg-black dark:bg-yellow-500 text-white hover:bg-gray-800 dark:hover:bg-yellow-600 shadow-sm transition-colors',
+    hero: 'bg-black dark:bg-yellow-500 text-white hover:bg-gray-800 dark:hover:bg-yellow-600 shadow-lg hover:shadow-xl transition-all',
+    outline: 'border-2 border-gray-300 dark:border-yellow-400 bg-transparent dark:bg-transparent hover:bg-gray-100 dark:hover:bg-yellow-500/20 hover:border-gray-400 dark:hover:border-yellow-500 text-foreground dark:text-white shadow-sm hover:shadow-md transition-all',
+    ghost: 'hover:bg-gray-100 dark:hover:bg-yellow-500/20 hover:text-foreground dark:hover:text-white text-muted-foreground dark:text-gray-300 transition-colors',
+    secondary: 'bg-gray-200 dark:bg-yellow-500/20 text-foreground dark:text-white hover:bg-gray-300 dark:hover:bg-yellow-500/30 border border-gray-300 dark:border-yellow-400 shadow-sm hover:shadow-md transition-all',
+    destructive: 'bg-red-600 dark:bg-red-600 text-white hover:bg-red-700 dark:hover:bg-red-700 shadow-sm transition-colors',
   }
 
   const sizes = {

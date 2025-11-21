@@ -124,7 +124,7 @@ const InviteUserDialog = ({ onInviteSent }) => {
           </div>
           <Button 
             type="submit" 
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5"
+            className="w-full bg-black dark:bg-yellow-500 hover:bg-gray-800 dark:hover:bg-yellow-600 text-white font-medium py-2.5"
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Send Invitation'}

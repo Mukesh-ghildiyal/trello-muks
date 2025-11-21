@@ -104,7 +104,7 @@ const AcceptInvite = () => {
             <div className="flex flex-col space-y-2">
               <Button
                 onClick={() => navigate('/login')}
-                className="w-full bg-purple-600 hover:bg-purple-700"
+                className="w-full bg-black dark:bg-yellow-500 hover:bg-gray-800 dark:hover:bg-yellow-600 text-white"
               >
                 Go to Login
               </Button>
@@ -155,7 +155,7 @@ const AcceptInvite = () => {
               {boardId && (
                 <Button
                   onClick={() => navigate(`/board/${boardId}`)}
-                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  className="w-full bg-black dark:bg-yellow-500 hover:bg-gray-800 dark:hover:bg-yellow-600 text-white"
                 >
                   Go to Board
                 </Button>
@@ -179,7 +179,7 @@ const AcceptInvite = () => {
               <div className="flex flex-col space-y-2 w-full">
                 <Button
                   onClick={() => navigate('/dashboard')}
-                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  className="w-full bg-black dark:bg-yellow-500 hover:bg-gray-800 dark:hover:bg-yellow-600 text-white"
                 >
                   Go to Dashboard
                 </Button>

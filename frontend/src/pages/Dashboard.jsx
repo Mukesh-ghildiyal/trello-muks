@@ -9,6 +9,7 @@ import { Layers, Plus, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { boardsAPI } from "@/services/api";
 import PendingInvites from "@/components/PendingInvites";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -76,8 +77,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-board-bg">
-      <header className="bg-card border-b border-border sticky top-0 z-10 shadow-sm">
+    <div className="min-h-screen bg-board-bg dark:bg-slate-900">
+      <header className="bg-card dark:bg-slate-800 border-b border-border dark:border-slate-700 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center shadow-md">
@@ -85,10 +86,13 @@ const Dashboard = () => {
             </div>
             <h1 className="text-2xl font-bold text-foreground">TaskBoard</h1>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-            <LogOut className="w-4 h-4" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </div>
         </div>
       </header>
 

@@ -19,6 +19,26 @@
   --color-grey-dark: #4b5563;
 }
 
+/* Dark mode theme variables */
+.dark {
+  --color-primary: #60a5fa;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #94a3b8;
+  --color-accent: #1e293b;
+  --color-board-bg: #0f172a;
+  --color-muted-foreground: #94a3b8;
+  --color-card: #1e293b;
+  --color-card-foreground: #f1f5f9;
+  --color-background: #0f172a;
+  --color-input: #334155;
+  --color-ring: #fbbf24;
+  --color-border: #334155;
+  --color-foreground: #f1f5f9;
+  --color-grey: #94a3b8;
+  --color-grey-light: #cbd5e1;
+  --color-grey-dark: #64748b;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -31,7 +51,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light;
+  color-scheme: light dark;
   color: #0f172a;
   background-color: #ffffff;
 
@@ -39,6 +59,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark {
+  color: #f1f5f9;
+  background-color: #0f172a;
 }
 
 a {

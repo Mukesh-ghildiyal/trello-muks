@@ -70,10 +70,10 @@ const PendingInvites = () => {
   }
 
   return (
-    <Card className="mb-6 border-blue-200 bg-blue-50/50">
+    <Card className="mb-6 border-blue-200 dark:border-yellow-500/30 bg-blue-50/50 dark:bg-yellow-500/10">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Mail className="w-5 h-5 text-blue-600" />
+          <Mail className="w-5 h-5 text-blue-600 dark:text-yellow-500" />
           <CardTitle className="text-lg">Pending Invitations</CardTitle>
         </div>
         <CardDescription>
@@ -85,13 +85,13 @@ const PendingInvites = () => {
           {invites.map((invite) => (
             <div
               key={invite._id}
-              className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-200"
+              className="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-lg border border-blue-200 dark:border-yellow-500/30"
             >
               <div className="flex-1">
-                <div className="font-medium text-gray-900">
+                <div className="font-medium text-gray-900 dark:text-gray-100">
                   {invite.board?.name || 'Unknown Board'}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   Invited by {invite.invitedBy?.name || 'Someone'}
                   {invite.board?.description && (
                     <span className="text-gray-500"> • {invite.board.description}</span>
@@ -102,7 +102,7 @@ const PendingInvites = () => {
                 size="sm"
                 onClick={() => handleAccept(invite.token)}
                 disabled={accepting === invite.token}
-                className="ml-4 bg-blue-600 hover:bg-blue-700"
+                className="ml-4 bg-black dark:bg-yellow-500 hover:bg-gray-800 dark:hover:bg-yellow-600 text-white"
               >
                 {accepting === invite.token ? (
                   <>

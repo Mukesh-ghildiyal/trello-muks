@@ -19,6 +19,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus, Users, Sparkles } from "lucide-react";
+import ThemeToggle from "@/components/board/ThemeToggle";
 
 import BoardList from "@/components/board/BoardList";
 import CardItem from "@/components/board/CardItem";
@@ -253,15 +254,15 @@ const Board = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-gray-800 text-white sticky top-0 z-10 shadow-md">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 flex flex-col">
+      <header className="bg-gray-800 dark:bg-slate-800 text-white sticky top-0 z-10 shadow-md">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between max-w-full">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate("/dashboard")}
-              className="gap-2 text-white hover:bg-gray-700"
+              className="gap-2 text-white hover:bg-gray-700 dark:hover:bg-yellow-500/20"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
@@ -272,6 +273,7 @@ const Board = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <BoardMembers boardId={boardId} board={board} />
             
             <Button
@@ -282,8 +284,8 @@ const Board = () => {
               }
               className={`gap-2 font-medium transition-colors ${
                 showRecommendations
-                  ? 'bg-gray-600 text-white hover:bg-gray-700'
-                  : 'text-white hover:bg-blue-500/20 hover:text-blue-200'
+                  ? 'bg-gray-600 dark:bg-yellow-500 text-white hover:bg-gray-700 dark:hover:bg-yellow-600'
+                  : 'text-white hover:bg-blue-500/20 dark:hover:bg-yellow-500/20 hover:text-blue-200 dark:hover:text-white'
               }`}
             >
               <Sparkles className="w-4 h-4" />
@@ -301,7 +303,7 @@ const Board = () => {
         </div>
       ) : (
         <div className="flex flex-1 overflow-hidden">
-          <main className="flex-1 overflow-x-auto p-4 bg-gray-100">
+          <main className="flex-1 overflow-x-auto p-4 bg-gray-100 dark:bg-slate-900">
             <DndContext
             sensors={sensors}
             collisionDetection={closestCorners}

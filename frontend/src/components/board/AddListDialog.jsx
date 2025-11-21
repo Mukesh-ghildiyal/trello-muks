@@ -21,12 +21,12 @@ const AddListDialog = ({ onAddList }) => {
     return (
       <div className="flex-shrink-0 w-72">
         <div
-          className="bg-gray-50 border-dashed border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 hover:border-gray-400 transition-colors h-fit min-h-[100px] flex items-center justify-center"
+          className="bg-gray-50 dark:bg-slate-800 border-dashed border-2 border-gray-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 hover:border-gray-400 dark:hover:border-slate-500 transition-colors h-fit min-h-[100px] flex items-center justify-center"
           onClick={() => setIsOpen(true)}
         >
           <div className="flex items-center">
-            <Plus className="w-5 h-5 mr-2 text-gray-500" />
-            <span className="text-gray-600 font-medium text-sm">Add List</span>
+            <Plus className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
+            <span className="text-gray-600 dark:text-gray-300 font-medium text-sm">Add List</span>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@ const AddListDialog = ({ onAddList }) => {
 
   return (
     <div className="flex-shrink-0 w-72">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-3">
         <form onSubmit={handleSubmit} className="space-y-3">
           <Input
             placeholder="Enter list title"
@@ -50,7 +50,7 @@ const AddListDialog = ({ onAddList }) => {
             }}
           />
           <div className="flex gap-2">
-            <Button type="submit" size="sm" variant="default" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button type="submit" size="sm" variant="default">
               Add List
             </Button>
             <Button
