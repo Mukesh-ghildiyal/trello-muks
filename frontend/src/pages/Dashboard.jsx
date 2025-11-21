@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Layers, Plus, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { boardsAPI } from "@/services/api";
+import PendingInvites from "@/components/PendingInvites";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -92,6 +93,7 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <PendingInvites />
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold text-foreground mb-2">My Boards</h2>

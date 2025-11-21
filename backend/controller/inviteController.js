@@ -133,15 +133,27 @@ exports.acceptInvite = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email: invite.email });
-    if (!user) {
+    // Get the authenticated user
+    const authenticatedUser = await User.findById(req.userId);
+    if (!authenticatedUser) {
       return res.status(404).json({
         success: false,
         message: 'User not found',
       });
     }
 
-    // Check if user is already a member
+    // Verify that the authenticated user's email matches the invite email
+    const normalizedInviteEmail = invite.email.toLowerCase().trim();
+    const normalizedUserEmail = authenticatedUser.email.toLowerCase().trim();
+    
+    if (normalizedUserEmail !== normalizedInviteEmail) {
+      return res.status(403).json({
+        success: false,
+        message: 'This invitation was sent to a different email address. Please log in with the email address that received the invitation.',
+      });
+    }
+
+    // Check if board exists
     const board = await Board.findById(invite.board);
     if (!board) {
       return res.status(404).json({
@@ -151,12 +163,25 @@ exports.acceptInvite = async (req, res) => {
     }
 
     // Check if user is already a member
-    const userId = String(user._id);
+    const userId = String(authenticatedUser._id);
+    const ownerId = String(board.owner);
+    const isOwner = ownerId === userId;
     const isAlreadyMember = board.members && board.members.length > 0 && 
                             board.members.some(m => {
                               const memberId = m._id ? String(m._id) : String(m);
                               return memberId === userId;
                             });
+
+    if (isOwner) {
+      // If user is the owner, mark invite as accepted but don't add them again
+      invite.status = 'accepted';
+      await invite.save();
+      return res.status(200).json({
+        success: true,
+        message: 'You are already the owner of this board',
+        data: { board },
+      });
+    }
 
     if (isAlreadyMember) {
       invite.status = 'accepted';
@@ -169,7 +194,7 @@ exports.acceptInvite = async (req, res) => {
     }
 
     // Add user to board members
-    board.members.push(user._id);
+    board.members.push(authenticatedUser._id);
     await board.save();
 
     invite.status = 'accepted';
@@ -213,6 +238,50 @@ exports.getBoardMembers = async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message || 'Error fetching members',
+    });
+  }
+};
+
+// Get pending invitations for the authenticated user
+exports.getMyPendingInvites = async (req, res) => {
+  try {
+    const authenticatedUser = await User.findById(req.userId);
+    if (!authenticatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    const normalizedUserEmail = authenticatedUser.email.toLowerCase().trim();
+
+    // Find all pending invites for this user's email
+    const invites = await BoardInvite.find({
+      email: normalizedUserEmail,
+      status: 'pending',
+    })
+      .populate({
+        path: 'board',
+        select: 'name description color owner',
+        populate: {
+          path: 'owner',
+          select: 'name email',
+        },
+      })
+      .populate({
+        path: 'invitedBy',
+        select: 'name email',
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: { invites },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error fetching invitations',
     });
   }
 };

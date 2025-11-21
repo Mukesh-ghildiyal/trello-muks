@@ -7,6 +7,7 @@ const { protect } = require('../middleware/auth');
 router.post('/:boardId', protect, inviteController.sendInvite);
 
 // GET routes
+router.get('/my-invites', protect, inviteController.getMyPendingInvites);
 router.get('/accept/:token', protect, inviteController.acceptInvite);
 router.get('/:boardId/members', protect, inviteController.getBoardMembers);
 

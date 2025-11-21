@@ -170,6 +170,10 @@ export const invitesAPI = {
   getBoardMembers: async (boardId) => {
     return apiRequest(`/invites/${boardId}/members`, { method: 'GET' });
   },
+
+  getMyPendingInvites: async () => {
+    return apiRequest('/invites/my-invites', { method: 'GET' });
+  },
 };
 
 // Recommendations API

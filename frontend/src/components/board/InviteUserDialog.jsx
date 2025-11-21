@@ -17,35 +17,57 @@ const InviteUserDialog = ({ onInviteSent }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (email.trim()) {
-      try {
-        setLoading(true)
-        setError('')
-        setSuccess(false)
-        const response = await invitesAPI.sendInvite(boardId, email)
-        if (response.success) {
-          setSuccess(true)
-          setEmail('')
-          // Call callback to refresh board/members
-          if (onInviteSent) {
-            onInviteSent()
-          }
-          setTimeout(() => {
-            setIsOpen(false)
-            setSuccess(false)
-          }, 2000)
+    if (!email.trim()) {
+      setError('Please enter an email address')
+      return
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email.trim())) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError('')
+      setSuccess(false)
+      const response = await invitesAPI.sendInvite(boardId, email.trim())
+      if (response.success) {
+        setSuccess(true)
+        setEmail('')
+        // Call callback to refresh board/members
+        if (onInviteSent) {
+          onInviteSent()
         }
-      } catch (error) {
-        const errorMessage = error.message || 'Failed to send invitation';
-        setError(errorMessage);
-      } finally {
-        setLoading(false)
+        setTimeout(() => {
+          setIsOpen(false)
+          setSuccess(false)
+        }, 2000)
+      } else {
+        setError(response.message || 'Failed to send invitation')
       }
+    } catch (error) {
+      const errorMessage = error.message || 'Failed to send invitation'
+      setError(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDialogChange = (open) => {
+    setIsOpen(open)
+    if (!open) {
+      // Reset form when dialog closes
+      setEmail('')
+      setError('')
+      setSuccess(false)
     }
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
         <Button
           variant="ghost"
